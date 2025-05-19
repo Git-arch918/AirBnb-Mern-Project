@@ -1,0 +1,143 @@
+<style>
+  .search-btn {
+    background-color: #fe424d;
+    color: #fff;
+    border-radius: 25px;
+    padding: 0 1rem;
+  }
+
+  .search-btn:hover {
+    background-color: #fe424d;
+    color: #fff;
+  }
+
+  .search-btn i {
+    display: inline;
+    margin-right: 0.5rem;
+  }
+
+  .search-input {
+    margin-left: 100px;
+    border-radius: 25px;
+    font-size: 0.9rem;
+  }
+ 
+  /* Custom style for white matte background when expanded */
+  .navbar-collapse {
+    background-color: white;
+    padding: 1rem;
+    z-index: 1050; /* Bootstrap default modal z-index */
+    position: relative;
+  }
+
+  @media (max-width: 991.98px) {
+    /* Small screens: Full width white background */
+    .navbar-collapse {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      width: 100%;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      border-bottom-left-radius: 1rem;
+      border-bottom-right-radius: 1rem;
+    }
+
+    .navbar {
+      position: relative;
+      z-index: 1100;
+    }
+  }
+  @media (max-width: 991.98px) {
+  .navbar-collapse .nav-link {
+    padding-left: 0.5rem;
+  }
+
+  .navbar-collapse .nav-link + .nav-link {
+    margin-top: 0.5rem;
+  }
+
+  .navbar-collapse form {
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+  }
+}
+
+</style>
+
+<nav class="navbar navbar-expand-lg bg-white border-bottom sticky-top">
+  <div class="container-fluid">
+    <!-- Brand -->
+    <a class="navbar-brand" href="/listings"><i class="fa-solid fa-compass"></i></a>
+
+    <!-- Toggler for small screens -->
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup"
+      aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <!-- Navbar Content -->
+    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+
+      <!-- Large screen layout -->
+      <div class="d-none d-lg-flex justify-content-between w-100 align-items-center">
+        <!-- Left Nav -->
+        <div class="navbar-nav">
+          <a class="nav-link" href="/listings">Explore</a>
+        </div>
+
+        <!-- Centered Search -->
+        
+     <form class="d-flex mx-auto" role="search" method="GET" action="/listings/search">
+  <input
+    class="form-control me-1 search-input"
+    type="search"
+    name="q"
+    placeholder="Search &nbsp;Destinations!"
+  />
+  <button class="btn search-btn" type="submit">
+    <i class="fa-solid fa-magnifying-glass"></i>Search
+  </button>
+</form>
+
+       
+
+        <!-- Right Nav -->
+        <div class="navbar-nav ms-auto">
+          <a class="nav-link" href="/listings/new"> Your Airbnb</a>
+          <% if (!currUser) { %>
+            <a class="nav-link" href="/signup"><b>Sign Up</b></a>
+            <a class="nav-link" href="/login"><b>Log In</b></a>
+          <% } else { %>
+            <a class="nav-link" href="/logout"><b>Log Out</b></a>
+          <% } %>
+        </div>
+      </div>
+
+<!-- Small screen layout -->
+<div class="d-lg-none w-100 d-flex flex-column align-items-start mt-0 gap-3">
+
+  <!-- Explore link with margin-bottom -->
+  <a class="nav-link  mb-1" href="/listings" style="font-weight: 500;">Explore</a>
+
+  <!-- Search icon only -->
+  <form class="d-flex align-items-center mt-0 mb-2" role="search">
+    <button class="btn search-btn mb-0" type="submit">
+      <i class="fa-solid fa-magnifying-glass"></i>
+    </button>
+  </form>
+
+  <!-- Airbnb and Auth Links with spacing -->
+  <a class="nav-link" href="/listings/new">Airbnb</a>
+
+  <% if (!currUser) { %>
+    <a class="nav-link" href="/signup"><b>Sign Up</b></a>
+    <a class="nav-link" href="/login"><b>Log In</b></a>
+  <% } else { %>
+    <a class="nav-link" href="/logout"><b>Log Out</b></a>
+  <% } %>
+
+</div>
+
+    </div>
+  </div>
+</nav>
