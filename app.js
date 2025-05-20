@@ -83,12 +83,18 @@ next();
 
 app.use("/listings",listingRouter);
 app.use("/listings/:id/reviews",reviewRouter);
+app.get("/", (req, res) => {
+  res.redirect("/listings"); // or render a homepage if you have one
+});
 app.use("/",userRouter);
+
+
 
 app.use((err, req, res, next) => {
   const { statusCode = 500, message = "Something went wrong!" } = err;
   res.status(statusCode).render("listings/error.ejs",{err});
 });
+
 
 app.listen(8080, () => {
   console.log("server is listening to port 8080");
