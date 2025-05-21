@@ -91,7 +91,7 @@ app.get("/", (req, res) => {
 
 app.use((err, req, res, next) => {
   const { statusCode = 500, message = "Something went wrong!" } = err;
-  res.status(statusCode).render("listings/error.ejs",{err});
+  res.status(statusCode).render("listings/error",{err});
 });
 
 
