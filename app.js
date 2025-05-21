@@ -81,6 +81,9 @@ res.locals.currUser=req.user;
 next();
 })
 
+app.get("/", (req, res) => {
+    res.redirect("/listings"); // Or res.render("home");
+});
 app.use("/listings",listingRouter);
 app.use("/listings/:id/reviews",reviewRouter);
 app.use("/",userRouter);
@@ -89,7 +92,7 @@ app.use("/",userRouter);
 
 app.use((err, req, res, next) => {
   const { statusCode = 500, message = "Something went wrong!" } = err;
-  res.status(statusCode).render("listings/error",{err});
+  res.status(statusCode).render("listings/error.ejs",{err});
 });
 
 
