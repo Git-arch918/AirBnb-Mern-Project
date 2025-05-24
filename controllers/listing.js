@@ -8,17 +8,23 @@ module.exports.renderNewform=(req, res) => {
   res.render("listings/new.ejs");
 }
 
-module.exports.showlisting=async (req, res) => {
+module.exports.showlisting = async (req, res) => {
   let { id } = req.params;
-  const listing = await Listing.findById(id).populate({path:"reviews",populate:{
-    path:"author"},
-  }).populate({ path: "owner", select: "username" });; //id k sath sath puri obj bhej dega
-  if(!listing){
-   req.flash("error","Listing you requested for, does not exists!") 
-  return  res.redirect("/listings");
+  const listing = await Listing.findById(id)
+    .populate({
+      path: "reviews",
+      populate: { path: "author" },
+    })
+    .populate({ path: "owner", select: "username" });
+
+  if (!listing) {
+    req.flash("error", "Listing you requested for does not exist!");
+    return res.redirect("/listings");
   }
-  res.render("listings/show.ejs", { listing });
-}
+
+  res.render("listings/show.ejs", { listing, currUser: req.user });
+};
+
 
 const axios = require("axios");
 
