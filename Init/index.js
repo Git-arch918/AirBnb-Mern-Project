@@ -67,26 +67,35 @@ const geocodeLocation = async (location) => {
   }
 };
 
+const User = require("../models/user.js");
+
 const initDB = async () => {
   await Listing.deleteMany({});
-let categoryIndex = 0;
 
-for (let i = 0; i < initData.data.length; i++) {
-  const obj = initData.data[i];
-  const geometry = await geocodeLocation(obj.location);
+  const user = await User.findOne(); // Get any existing user
+  if (!user) {
+    throw new Error("No users found in the database. Please seed users first.");
+  }
 
-  const assignedCategory = categories[categoryIndex];
-  categoryIndex = (categoryIndex + 1) % categories.length;
+  let categoryIndex = 0;
 
-  const listing = new Listing({
-    ...obj,
-    category: assignedCategory,
-    owner: "68247637d82c696a22a3ffce",
-    geometry
-  });
+  for (let i = 0; i < initData.data.length; i++) {
+    const obj = initData.data[i];
+    const geometry = await geocodeLocation(obj.location);
 
-  await listing.save();
-  console.log(`Saved: ${listing.title} (${assignedCategory})`);
-}
+    const assignedCategory = categories[categoryIndex];
+    categoryIndex = (categoryIndex + 1) % categories.length;
+
+    const listing = new Listing({
+      ...obj,
+      category: assignedCategory,
+      owner: user._id, // ✅ assign valid user ID
+      geometry
+    });
+
+    await listing.save();
+    console.log(`Saved: ${listing.title} (${assignedCategory})`);
+  }
 };
+
  
