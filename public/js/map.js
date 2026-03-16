@@ -4,7 +4,7 @@ const defaultCoordinates = [77.5946, 12.9716]; // Bangalore fallback
 
 const map = new maplibregl.Map({
   container: 'map',
-  style: 'https://api.maptiler.com/maps/streets/style.json?key=YOUR_REAL_API_KEY', // Replace with your key
+  style: 'https://demotiles.maplibre.org/style.json', // Free demo style
   center: coordinates && coordinates.length === 2 ? coordinates : defaultCoordinates,
   zoom: 10,
   attributionControl: false

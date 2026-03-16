@@ -32,28 +32,40 @@ module.exports.createlisting = async (req, res, next) => {
   try {
     const { location } = req.body.listing;
 
-    // 🧭 Forward geocode the location using Nominatim
-    const geoRes = await axios.get("https://nominatim.openstreetmap.org/search", {
-      params: {
-        q: location,
-        format: "json",
-        limit: 1,
-      },
-      headers: {
-        "User-Agent": "yourappname/1.0 (your-email@example.com)" // Required by Nominatim
-      }
-    });
+    let lat, lon;
+    try {
+      // 🧭 Forward geocode the location using Nominatim
+      const geoRes = await axios.get("https://nominatim.openstreetmap.org/search", {
+        params: {
+          q: `${location}, ${req.body.listing.country}`,
+          format: "json",
+          limit: 1,
+        },
+        headers: {
+          "User-Agent": "yourappname/1.0 (your-email@example.com)" // Required by Nominatim
+        }
+      });
 
-    if (!geoRes.data || geoRes.data.length === 0) {
-      throw new Error("Could not find coordinates for the given location.");
+      if (geoRes.data && geoRes.data.length > 0) {
+        lat = parseFloat(geoRes.data[0].lat);
+        lon = parseFloat(geoRes.data[0].lon);
+        console.log(`📍 Coordinates for ${location}: [${lon}, ${lat}]`);
+      } else {
+        throw new Error("No coordinates found");
+      }
+    } catch (geoError) {
+      console.warn("Geocoding failed, using default coordinates:", geoError.message);
+      // Default to a central location, e.g., New York or something
+      lat = 40.7128;
+      lon = -74.0060;
     }
 
-    const lat = parseFloat(geoRes.data[0].lat);
-    const lon = parseFloat(geoRes.data[0].lon);
+    if (!req.file) {
+      req.flash("error", "Image is required!");
+      return res.redirect("/listings/new");
+    }
 
-    console.log(`📍 Coordinates for ${location}: [${lon}, ${lat}]`);
-
-    const url = req.file.path;
+    const url = '/uploads/' + req.file.filename;
     const filename = req.file.filename;
 
     const newListing = new Listing(req.body.listing);
@@ -76,7 +88,7 @@ module.exports.createlisting = async (req, res, next) => {
     res.redirect("/listings");
 
   } catch (err) {
-    console.error("Error creating listing with geocoding:", err.message);
+    console.error("Error creating listing:", err.message);
     next(err);
   }
 };
@@ -108,7 +120,7 @@ module.exports.updatelisting = async (req, res) => {
     try {
       const geoRes = await axios.get("https://nominatim.openstreetmap.org/search", {
         params: {
-          q: newData.location,
+          q: `${newData.location}, ${newData.country}`,
           format: "json",
           limit: 1,
         },
@@ -140,7 +152,7 @@ module.exports.updatelisting = async (req, res) => {
 
   // 💾 Update image if needed
   if (typeof req.file !== "undefined") {
-    const url = req.file.path;
+    const url = '/uploads/' + req.file.filename;
     const filename = req.file.filename;
     listing.image = { url, filename };
     await listing.save();

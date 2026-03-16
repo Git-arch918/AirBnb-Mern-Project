@@ -14,7 +14,7 @@ router.
 route("/")
 .get(wrapAsync(listingcontroller.index)
 )
-.post(isLoggedIn,upload.single('listing[image]'),wrapAsync(listingcontroller.createlisting));
+.post(isLoggedIn,upload.single('listing[image]'),validatelisting,wrapAsync(listingcontroller.createlisting));
 
 
 router.get("/filters",listingcontroller.anchoritems);

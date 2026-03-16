@@ -37,7 +37,7 @@ const geocodeLocation = async (location) => {
   try {
     const res = await axios.get("https://nominatim.openstreetmap.org/search", {
       params: {
-        q: location,
+        q: `${location}, ${obj.country}`,
         format: "json",
         limit: 1
       },
